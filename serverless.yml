@@ -1,0 +1,115 @@
+service: product-service-api
+
+# Use the serverless-webpack plugin to transpile ES7
+# Use the serverless-mocha-plugin plugin for TDD
+plugins:
+  - serverless-webpack
+  - serverless-mocha-plugin
+
+# Enable auto-packing of external modules
+custom:
+  webpackIncludeModules: true
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  stage: dev
+  region: us-east-1
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:us-east-1:*:*"
+
+functions:
+  create:
+    # Defines an HTTP API endpoint that calls the main function in api/create.js
+    # - path: url path is /services
+    # - method: POST request
+    # - cors: enabled CORS (Cross-Origin Resource Sharing) for browser cross
+    #     domain api call
+    # - authorizer: authenticate the api via Cognito User Pool. Update the 'arn'
+    #     with your own User Pool ARN
+    handler: api/create.create
+    events:
+      - http:
+          path: services
+          method: post
+          cors: true
+          authorizer:
+            arn: arn:aws:cognito-idp:xxx
+
+  get:
+    # Defines an HTTP API endpoint that calls the main function in api/get.js
+    # - path: url path is /services/{id}
+    # - method: GET request
+    # - cors: enabled CORS (Cross-Origin Resource Sharing) for browser cross
+    #     domain api call
+    # - authorizer: authenticate the api via Cognito User Pool. Update the 'arn'
+    #     with your own User Pool ARN
+    handler: api/get.get
+    events:
+      - http:
+          path: services/{id}
+          method: get
+          cors: true
+          authorizer:
+            arn: arn:aws:cognito-idp:xxx
+
+  list:
+    # Defines an HTTP API endpoint that calls the main function in api/list.js
+    # - path: url path is /services
+    # - method: GET request
+    # - cors: enabled CORS (Cross-Origin Resource Sharing) for browser cross
+    #     domain api call
+    # - authorizer: authenticate the api via Cognito User Pool. Update the 'arn'
+    #     with your own User Pool ARN
+    handler: api/list.list
+    events:
+      - http:
+          path: services
+          method: get
+          cors: true
+          authorizer:
+            arn: arn:aws:cognito-idp:xxx
+
+  update:
+    # Defines an HTTP API endpoint that calls the main function in api/update.js
+    # - path: url path is /services/{id}
+    # - method: PUT request
+    # - cors: enabled CORS (Cross-Origin Resource Sharing) for browser cross
+    #     domain api call
+    # - authorizer: authenticate the api via Cognito User Pool. Update the 'arn'
+    #     with your own User Pool ARN
+    handler: api/update.delete
+    events:
+      - http:
+          path: services/{id}
+          method: put
+          cors: true
+          authorizer:
+            arn: arn:aws:cognito-idp:xxx
+
+  delete:
+    # Defines an HTTP API endpoint that calls the main function in api/delete.js
+    # - path: url path is /services/{id}
+    # - method: DELETE request
+    # - cors: enabled CORS (Cross-Origin Resource Sharing) for browser cross
+    #     domain api call
+    # - authorizer: authenticate the api via Cognito User Pool. Update the 'arn'
+    #     with your own User Pool ARN
+    handler: api/delete.delete
+    events:
+      - http:
+          path: services/{id}
+          method: delete
+          cors: true
+          authorizer:
+            arn: arn:aws:cognito-idp:xxx
